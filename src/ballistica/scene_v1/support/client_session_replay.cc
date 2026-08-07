@@ -297,6 +297,13 @@ void ClientSessionReplay::Error(const std::string& description) {
 }
 
 void ClientSessionReplay::OnReset(bool rewind) {
+  // During export, a rewind means EOF was hit — end the session
+  // instead of looping back to the beginning.
+  if (is_exporting_ && rewind) {
+    End();
+    return;
+  }
+
   // Handles base resetting.
   ClientSession::OnReset(rewind);
 

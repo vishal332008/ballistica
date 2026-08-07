@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -390,6 +390,8 @@
     <ClInclude Include="..\..\src\ballistica\base\graphics\texture\ktx2.h" />
     <ClCompile Include="..\..\src\ballistica\base\graphics\texture\pvr.cc" />
     <ClInclude Include="..\..\src\ballistica\base\graphics\texture\pvr.h" />
+    <ClCompile Include="..\..\src\ballistica\base\graphics\video\video_encoder.cc" />
+    <ClInclude Include="..\..\src\ballistica\base\graphics\video\video_encoder.h" />
     <ClInclude Include="..\..\src\ballistica\base\input\device\feedback_event.h" />
     <ClCompile Include="..\..\src\ballistica\base\input\device\input_device.cc" />
     <ClInclude Include="..\..\src\ballistica\base\input\device\input_device.h" />
@@ -679,6 +681,8 @@
     <ClInclude Include="..\..\src\ballistica\scene_v1\support\player.h" />
     <ClCompile Include="..\..\src\ballistica\scene_v1\support\player_spec.cc" />
     <ClInclude Include="..\..\src\ballistica\scene_v1\support\player_spec.h" />
+    <ClCompile Include="..\..\src\ballistica\scene_v1\support\replay_video_exporter.cc" />
+    <ClInclude Include="..\..\src\ballistica\scene_v1\support\replay_video_exporter.h" />
     <ClCompile Include="..\..\src\ballistica\scene_v1\support\replay_writer.cc" />
     <ClInclude Include="..\..\src\ballistica\scene_v1\support\replay_writer.h" />
     <ClCompile Include="..\..\src\ballistica\scene_v1\support\scene.cc" />

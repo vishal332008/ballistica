@@ -11,6 +11,7 @@
 #include "ballistica/base/graphics/graphics.h"
 #include "ballistica/base/graphics/support/screen_messages.h"
 #include "ballistica/base/input/input.h"
+#include "ballistica/base/logic/logic.h"
 #include "ballistica/base/python/base_python.h"
 #include "ballistica/base/python/class/python_class_lang_str.h"
 #include "ballistica/base/python/class/python_class_simple_sound.h"
@@ -29,11 +30,13 @@
 #include "ballistica/scene_v1/python/scene_v1_python.h"
 #include "ballistica/scene_v1/scene_v1.h"
 #include "ballistica/scene_v1/support/client_session_replay.h"
+#include "ballistica/scene_v1/support/replay_video_exporter.h"
 #include "ballistica/scene_v1/support/host_activity.h"
 #include "ballistica/scene_v1/support/host_session.h"
 #include "ballistica/scene_v1/support/scene.h"
 #include "ballistica/scene_v1/support/scene_v1_input_device_delegate.h"
 #include "ballistica/scene_v1/support/session_stream.h"
+#include "ballistica/shared/foundation/event_loop.h"
 #include "ballistica/shared/generic/utils.h"
 
 namespace ballistica::scene_v1 {
@@ -363,6 +366,58 @@ static PyMethodDef PyNewReplaySessionDef = {
     METH_VARARGS | METH_KEYWORDS,     // flags
 
     "new_replay_session(file_name: str) -> None\n"
+    "\n"
+    ":meta private:",
+};
+
+// ------------------------- export_replay_video ------------------------------
+
+static auto PyExportReplayVideo(PyObject* self, PyObject* args, PyObject* keywds)
+    -> PyObject* {
+  BA_PYTHON_TRY;
+  const char* replay_path_cstr = nullptr;
+  const char* output_mp4_path_cstr = nullptr;
+  int width = 1920;
+  int height = 1080;
+  int fps = 60;
+  int bitrate = 5000000;
+  static const char* kwlist[] = {"replay_path", "output_mp4_path", "width",
+                                 "height",      "fps",            "bitrate",
+                                 nullptr};
+  if (!PyArg_ParseTupleAndKeywords(
+          args, keywds, "ss|iiii", const_cast<char**>(kwlist),
+          &replay_path_cstr, &output_mp4_path_cstr,
+          &width, &height, &fps, &bitrate)) {
+    return nullptr;
+  }
+  std::string replay_path(replay_path_cstr ? replay_path_cstr : "");
+  std::string output_mp4_path(output_mp4_path_cstr ? output_mp4_path_cstr : "");
+  if (replay_path.empty() || output_mp4_path.empty()) {
+    PyErr_SetString(PyExc_ValueError, "replay_path and output_mp4_path must not be empty");
+    return nullptr;
+  }
+  // StartExportAsync calls LaunchReplaySession which asserts InLogicThread().
+  // The Python console (and any other caller) may run on a different thread,
+  // so always dispatch to the logic thread regardless of where we are called.
+  if (g_base && g_base->logic && g_base->logic->event_loop()) {
+    g_base->logic->event_loop()->PushCall(
+        [replay_path, output_mp4_path, width, height, fps, bitrate]() {
+          ReplayVideoExporter::StartExportAsync(replay_path, output_mp4_path,
+                                               width, height, fps, bitrate);
+        });
+  }
+  Py_RETURN_NONE;
+  BA_PYTHON_CATCH;
+}
+
+static PyMethodDef PyExportReplayVideoDef = {
+    "export_replay_video",             // name
+    (PyCFunction)PyExportReplayVideo,  // method
+    METH_VARARGS | METH_KEYWORDS,      // flags
+
+    "export_replay_video(replay_path: str, output_mp4_path: str,\n"
+    "  width: int = 1920, height: int = 1080, fps: int = 60,\n"
+    "  bitrate: int = 5000000) -> None\n"
     "\n"
     ":meta private:",
 };
@@ -1782,6 +1837,7 @@ static PyMethodDef PyReloadHooksDef = {
 
 auto PythonMethodsScene::GetMethods() -> std::vector<PyMethodDef> {
   return {
+      PyExportReplayVideoDef,
       PyNewReplaySessionDef,
       PyGetReplayAssetPackagesDef,
       PyNewHostSessionDef,

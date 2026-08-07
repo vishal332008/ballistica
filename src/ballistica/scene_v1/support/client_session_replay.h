@@ -41,6 +41,9 @@ class ClientSessionReplay : public ClientSession,
   void FetchMessages() override;
 
   void SeekTo(millisecs_t to_base_time);
+  auto is_file_open() const -> bool { return file_ != nullptr; }
+  /// When true, EOF ends the session instead of looping.
+  void set_exporting(bool val) { is_exporting_ = val; }
 
  private:
   struct IntermediateState {
@@ -63,6 +66,7 @@ class ClientSessionReplay : public ClientSession,
   bool is_fast_forwarding_{};
   millisecs_t fast_forward_base_time_{};
 
+  bool is_exporting_{false};
   bool have_sent_client_message_{};
   std::vector<ConnectionToClient*> connections_to_clients_;
   std::vector<ConnectionToClient*> connections_to_clients_ignored_;

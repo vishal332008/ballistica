@@ -598,6 +598,12 @@
     <ClInclude Include="..\..\src\ballistica\base\graphics\texture\pvr.h">
       <Filter>ballistica\base\graphics\texture</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\ballistica\base\graphics\video\video_encoder.cc">
+      <Filter>ballistica\base\graphics\video</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\src\ballistica\base\graphics\video\video_encoder.h">
+      <Filter>ballistica\base\graphics\video</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\ballistica\base\input\device\feedback_event.h">
       <Filter>ballistica\base\input\device</Filter>
     </ClInclude>
@@ -1465,6 +1471,12 @@
     <ClInclude Include="..\..\src\ballistica\scene_v1\support\player_spec.h">
       <Filter>ballistica\scene_v1\support</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\src\ballistica\scene_v1\support\replay_video_exporter.cc">
+      <Filter>ballistica\scene_v1\support</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\src\ballistica\scene_v1\support\replay_video_exporter.h">
+      <Filter>ballistica\scene_v1\support</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\src\ballistica\scene_v1\support\replay_writer.cc">
       <Filter>ballistica\scene_v1\support</Filter>
     </ClCompile>
@@ -2107,6 +2119,7 @@
     <Filter Include="ballistica\base\graphics\support" />
     <Filter Include="ballistica\base\graphics\text" />
     <Filter Include="ballistica\base\graphics\texture" />
+    <Filter Include="ballistica\base\graphics\video" />
     <Filter Include="ballistica\base\input" />
     <Filter Include="ballistica\base\input\device" />
     <Filter Include="ballistica\base\input\support" />

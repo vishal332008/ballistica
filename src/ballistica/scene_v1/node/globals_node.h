@@ -75,6 +75,7 @@ class GlobalsNode : public Node {
   }
   void SetAllowKickIdlePlayers(bool allow);
   auto slow_motion() const -> bool { return slow_motion_; }
+  auto game_speed() const -> float;
   void SetSlowMotion(bool val);
   auto paused() const -> bool { return paused_; }
   void SetPaused(bool val);

@@ -537,7 +537,12 @@ auto PlatformWindows::DoAbsPath(const std::string& path, std::string* outpath)
 }
 
 auto PlatformWindows::FOpen(const char* path, const char* mode) -> FILE* {
-  return _wfopen(UTF8Decode(path).c_str(), UTF8Decode(mode).c_str());
+  if (!path) return nullptr;
+  std::string p(path);
+  for (char& c : p) {
+    if (c == '/') c = '\\';
+  }
+  return _wfopen(UTF8Decode(p).c_str(), UTF8Decode(mode).c_str());
 }
 
 void PlatformWindows::DoMakeDir(const std::string& dir, bool quiet) {
